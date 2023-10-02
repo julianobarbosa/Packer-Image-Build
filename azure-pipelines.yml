@@ -8,8 +8,8 @@ variables:
   - group: packer-image-build-variables
 
 stages:
-- stage: win10_1909_evd_O365pp
-  displayName: Windows 10 O365 Pro Plus
+- stage: win11_22h2_ent
+  displayName: Windows 11 22h2 Enterprise
   jobs:
   - job: build
     displayName: Build Image
