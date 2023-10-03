@@ -1,0 +1,33 @@
+{
+  "ADOServicePrincipalAppId": "{{ env `ADOServicePrincipalAppId` }}",
+  "ADOServicePrincipalSecret": "{{ env `ADOServicePrincipalSecret` }}",
+  "TenantId": "{{ env `ARM_TENANT_ID` }}",
+  "SubscriptionId": "{{ env `ARM_SUBSCRIPTION_ID` }}",
+
+  "ImageDestRG": "{{ env `ImageDestRG` }}",    
+  "TempResourceGroup": "{{ env `TempResourceGroup` }}",
+
+  "VirtualNetwork": "",
+  "VirtualNetworkRG": "",
+  "Subnet": "",
+
+  "Location": "eastus",
+  "VMSize": "",
+
+  "StorageAccountInstallersName": "{{ env `StorageAccountInstallersName` }}",
+  "StorageAccountInstallersKey": "{{ env `StorageAccountInstallersKey` }}",
+  "StorageAccountInstallersPath": "{{ env `StorageAccountInstallersPath` }}",
+
+  "ImagePublisher":"canonical",
+  "ImageOffer":"0001-com-ubuntu-server-jammy",
+  "ImageSku":"22_04-lts",
+
+    "os_type": "Linux",
+    "image_publisher": "{{ user `ImagePublisher` }}",
+    "image_offer": "{{ user `ImageOffer` }}",
+    "image_sku": "{{ user `ImageSku` }}",
+
+
+  "Build_DefinitionName": "{{env `Build_DefinitionName`}}",
+  "Build_BuildNumber": "{{env `Build_BuildNumber`}}"
+}
