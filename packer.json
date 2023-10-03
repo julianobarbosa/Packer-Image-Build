@@ -5,7 +5,7 @@
     "TenantId": "{{ env `ARM_TENANT_ID` }}",
     "SubscriptionId": "{{ env `ARM_SUBSCRIPTION_ID` }}",
 
-    "ImageDestRG": "rg-hypera-packer-image",    
+    "ImageDestRG": "rg-hypera-packer-image",
     "TempResourceGroup": "rg-hypera-packer-image",
 
     "VirtualNetwork": "vnet-cafehyna-default",
@@ -29,7 +29,7 @@
   "builders": [
     {
       "type": "azure-arm",
-        
+
       "client_id": "{{user `ADOServicePrincipalAppId`}}",
       "client_secret": "{{user `ADOServicePrincipalSecret`}}",
       "tenant_id": "{{user `TenantId`}}",
@@ -85,7 +85,7 @@
         "include:$true"
       ],
       "updateLimit": 20
-    }
+    },
     {
       "type": "powershell",
       "script": "install_apps.ps1"
