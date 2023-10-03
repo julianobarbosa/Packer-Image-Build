@@ -1,27 +1,27 @@
 {
   "variables": {
-    "ADOServicePrincipalAppId": "{{ env `ADOServicePrincipalAppId` }}",
-    "ADOServicePrincipalSecret": "{{ env `ADOServicePrincipalSecret` }}",
-    "TenantId": "{{ env `ARM_TENANT_ID` }}",
-    "SubscriptionId": "{{ env `ARM_SUBSCRIPTION_ID` }}",
+    "ADOServicePrincipalAppId": "",
+    "ADOServicePrincipalSecret": "",
+    "TenantId": "",
+    "SubscriptionId": "",
 
-    "ImageDestRG": "rg-hypera-packer-image",
-    "TempResourceGroup": "rg-hypera-packer-image",
+    "ImageDestRG": "",    
+    "TempResourceGroup": "",
 
-    "VirtualNetwork": "vnet-cafehyna-default",
-    "VirtualNetworkRG": "RS_Hypera_Cafehyna",
-    "Subnet": "aks-default",
+    "VirtualNetwork": "",
+    "VirtualNetworkRG": "",
+    "Subnet": "",
 
-    "Location": "{{ env `Location` }}",
-    "VMSize": "Standard_D2_v2",
+    "Location": "",
+    "VMSize": "",
 
     "StorageAccountInstallersName": "",
     "StorageAccountInstallersKey": "",
     "StorageAccountInstallersPath": "",
 
     "ImagePublisher":"MicrosoftWindowsDesktop",
-    "ImageOffer":"{{ env `ImageOffer` }}",
-    "ImageSku":"{{ env `ImageSku` }}",
+    "ImageOffer":"office-365",
+    "ImageSku":"19h2-evd-o365pp",
 
     "Build_DefinitionName": "{{env `Build_DefinitionName`}}",
     "Build_BuildNumber": "{{env `Build_BuildNumber`}}"
@@ -29,7 +29,7 @@
   "builders": [
     {
       "type": "azure-arm",
-
+        
       "client_id": "{{user `ADOServicePrincipalAppId`}}",
       "client_secret": "{{user `ADOServicePrincipalSecret`}}",
       "tenant_id": "{{user `TenantId`}}",
