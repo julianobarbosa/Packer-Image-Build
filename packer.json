@@ -78,7 +78,7 @@
       ]
     },
     {
-      "type": "WindowsUpdate",
+      "type": "windows-update",
       "searchCriteria": "IsInstalled=0",
       "filters": [
         "exclude:$_.Title -like 'Preview'",
