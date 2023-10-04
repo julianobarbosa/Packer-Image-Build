@@ -1,0 +1,38 @@
+{
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "{{ user `ADOAppID` }}",
+    "client_secret": "{{ user `ADOAppSecret` }}",
+    "tenant_id": "{{ user `TenantID` }}",
+    "subscription_id": "{{ user `SubscriptionID` }}",
+
+    "managed_image_resource_group_name": "{{ user `ImageDestRG` }}",
+    "managed_image_name": "img-ubuntu-2204",
+
+    "os_type": "Linux",
+    "image_publisher": "{{ user `ImagePublisher` }}",
+    "image_offer": "{{ user `ImageOffer` }}",
+    "image_sku": "{{ user `ImageSku` }}",
+
+    "azure_tags": {
+        "Projeto": "INFRA_SO",
+        "task": "Image deployment"
+    },
+
+    "location": "East US",
+    "vm_size": "Standard_DS2_v2"
+  }],
+  "provisioners": [{
+    "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+    "inline": [
+      "apt update",
+      "apt upgrade -y",
+      "apt install nginx -y",
+
+      "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
+    ],
+    "inline_shebang": "/bin/sh -x",
+    "type": "shell"
+  }]
+}
