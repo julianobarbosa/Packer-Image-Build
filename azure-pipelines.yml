@@ -25,5 +25,6 @@ stages:
         connectedServiceType: 'azure'
         azureSubscription: 'azure-hypera'
         command: 'build'
+        force: true
         variables-file: 'packer-ubuntu-2204-var.json'
-        options: 'packer-ubuntu-2204.json'
+        options: '-only=packer-ubuntu-2204.json'
