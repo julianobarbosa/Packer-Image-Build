@@ -42,7 +42,7 @@ stages:
               "TenantId":"$(TenantId)",
               "VMSize":"$(VMSize)",
               "VirtualNetwork":"$(VirtualNetwork)",
-              "VirtualNetworkRG":"$(VirtualNetworkRG)"}',
+              "VirtualNetworkRG":"$(VirtualNetworkRG)"}'
         imageUri: "BuildImage"
     - task: "nkdagility.variablehydration.variabledehydration-task.variabledehydration@0"
       displayName: 'Save Build Variables: BuildImage'
