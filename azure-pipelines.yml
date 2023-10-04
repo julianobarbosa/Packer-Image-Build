@@ -17,9 +17,9 @@ stages:
       vmImage: windows-2019
     steps:
     - task: riezebosch.Packer.PackerTool.PackerTool@0
-      displayName: "Use Packer 1.5.6"
+      displayName: "Use Packer 1.9.4"
       inputs:
-        version: "1.5.6"
+        version: "1.9.4"
     - task: PackerTool@0
       displayName: "Show packer Version" 
       inputs:
