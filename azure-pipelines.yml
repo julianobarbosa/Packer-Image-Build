@@ -21,6 +21,7 @@ stages:
       inputs:
         version: "1.5.6"
     - task: PackerTool@0
+      displayName: "Show packer Version" 
       inputs:
         version: '1.9.4'
     - task: CmdLine@2
