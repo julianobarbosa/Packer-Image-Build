@@ -20,30 +20,13 @@ stages:
       displayName: "Use Packer 1.5.6"
       inputs:
         version: "1.5.6"
-    - task: "PackerBuild@1"
-      displayName: "Build Image"
-      inputs:
-        templateType: "custom"
-        customTemplateLocation: "packer-ubuntu-2204.json"
-        customTemplateParameters: '{
-              "ADOServicePrincipalAppId":"$(ADOAppID)",
-              "ADOServicePrincipalSecret":"$(ADOAppSecret)",
-              "ImageDestRG":"$(ImageDestRG)",
-              "ImageOffer":"$(ImageOffer)",
-              "ImagePublisher":"$(ImagePublisher)",
-              "ImageSku":"$(ImageSku)",
-              "Location":"$(Location)",
-              "StorageAccountInstallersKey":"$(StorageAccountKey)",
-              "StorageAccountInstallersName":"$(StorageAccountName)",
-              "StorageAccountInstallersPath":"$(StorageAccountInstallersPath)",
-              "Subnet":"$(Subnet)",
-              "SubscriptionId":"$(SubscriptionId)",
-              "TempResourceGroup":"$(TempResourceGroup)",
-              "TenantId":"$(TenantId)",
-              "VMSize":"$(VMSize)",
-              "VirtualNetwork":"$(VirtualNetwork)",
-              "VirtualNetworkRG":"$(VirtualNetworkRG)"}'
-        imageUri: "BuildImage"
+- task: PackerBuild@1
+  inputs:
+    templateType: 'custom'
+    customTemplateLocation: 'packer-ubuntu-2204.json'
+    customTemplateParameters: '{ "ADOServicePrincipalAppId":"$(ADOAppID)", "ADOServicePrincipalSecret":"$(ADOAppSecret)", "ImageDestRG":"$(ImageDestRG)", "ImageOffer":"$(ImageOffer)", "ImagePublisher":"$(ImagePublisher)", "ImageSku":"$(ImageSku)", "Location":"$(Location)", "StorageAccountInstallersKey":"$(StorageAccountKey)", "StorageAccountInstallersName":"$(StorageAccountName)", "StorageAccountInstallersPath":"$(StorageAccountInstallersPath)", "Subnet":"$(Subnet)", "SubscriptionId":"$(SubscriptionId)", "TempResourceGroup":"$(TempResourceGroup)", "TenantId":"$(TenantId)", "VMSize":"$(VMSize)", "VirtualNetwork":"$(VirtualNetwork)", "VirtualNetworkRG":"$(VirtualNetworkRG)"}'
+    packerVersion: '1.5.6'
+    imageUri: 'BuildImage'
     - task: "nkdagility.variablehydration.variabledehydration-task.variabledehydration@0"
       displayName: 'Save Build Variables: BuildImage'
       inputs:
