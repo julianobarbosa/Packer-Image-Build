@@ -23,3 +23,9 @@ stages:
     - task: PackerTool@0
       inputs:
         version: '1.9.4'
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo "Packer version"
+          
+          packer version
