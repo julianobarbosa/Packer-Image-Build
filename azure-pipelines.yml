@@ -25,20 +25,5 @@ stages:
         connectedServiceType: 'azure'
         azureSubscription: 'azure-hypera'
         command: 'build'
-        variables: |
-          ADOServicePrincipalAppId=$(ADOAppID)
-          ADOServicePrincipalSecret=$(ADOAppSecret)
-          ImageDestRG=$(ImageDestRG)
-          ImageOffer=$(ImageOffer)
-          ImagePublisher=$(ImagePublisher)
-          ImageSku=$(ImageSku)
-          Location=$(Location)
-          StorageAccountInstallersKey=$(StorageAccountKey)
-          StorageAccountInstallersName=$(StorageAccountName)
-          StorageAccountInstallersPath=$(StorageAccountInstallersPath)
-          Subnet=$(Subnet)
-          SubscriptionId=$(SubscriptionId)
-          TempResourceGroup=$(TempResourceGroup)
-          TenantId=$(TenantId)
-          VMSize=$(VMSize)
-          VirtualNetwork=$(VirtualNetwork)
+        variables-file: 'packer-ubuntu-2204-var.json'
+        options: 'packer-ubuntu-2204.json'
