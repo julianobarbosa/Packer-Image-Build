@@ -1,5 +1,22 @@
 # Introduction
 Create Golden Image for Azure (hypera).
+# ansible
+## to install ansible
+```bash
+python -m pip install 'ansible[azure]==2.9.5' --upgrade --forc
+```
+
+## to test ansible
+### create a resource group
+```bash
+ansible localhost -m azure_rm_resourcegroup -a "name=ansible-test location=eastus" -vvv
+```
+
+### remove a resource group
+```bash
+ansible localhost -m azure_rm_resourcegroup -a 'name=ansible-test location=eastus state=absent'
+```
+
 # to export group variables
 ```bash
 az pipelines variable-group show --group-id "2" --org "https://dev.azure.com/hyperadevops" -p "golden-image" --output json > 1.json
