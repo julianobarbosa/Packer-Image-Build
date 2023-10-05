@@ -1,0 +1,28 @@
+{
+  "ADOServicePrincipalAppId": "{{ env `ADOServicePrincipalAppId` }}",
+  "ADOServicePrincipalSecret": "{{ env `ADOServicePrincipalSecret` }}",
+  "TenantId": "{{ env `ARM_TENANT_ID` }}",
+  "SubscriptionId": "{{ env `ARM_SUBSCRIPTION_ID` }}",
+
+  "ImageDestRG": "{{ env `ImageDestRG` }}",    
+  "TempResourceGroup": "{{ env `TempResourceGroup` }}",
+
+  "VirtualNetwork": "",
+  "VirtualNetworkRG": "",
+  "Subnet": "",
+
+  "Location": "eastus",
+  "VMSize": "",
+
+  "StorageAccountInstallersName": "{{ env `StorageAccountInstallersName` }}",
+  "StorageAccountInstallersKey": "{{ env `StorageAccountInstallersKey` }}",
+  "StorageAccountInstallersPath": "{{ env `StorageAccountInstallersPath` }}",
+
+  "ImagePublisher":"{{ env `ImagePublisher` }}",
+  "ImageOffer":"{{ env  `ImageOffer` }}",
+  "ImageSku":"{{ env `ImageSku` }}",
+
+
+  "Build_DefinitionName": "{{ env `Build_DefinitionName` }}",
+  "Build_BuildNumber": "{{ env `Build_BuildNumber` }}"
+}
