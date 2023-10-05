@@ -29,7 +29,7 @@ stages:
     - task: Bash@3
       displayName: "packer build"
       inputs:
-        filePath: .azdo-pipelines/scripts/packer.sh
+        filePath: build-ubuntu-n590590.sh
         workingDirectory: $(WorkingDirectory)
       env: 
         PKR_VAR_subscription_id: $(ARM_SUBSCRIPTION_ID)
