@@ -30,7 +30,7 @@ stages:
       displayName: "packer build"
       inputs:
         filePath: .azdo-pipelines/scripts/packer.sh
-        workingDirectory: $(WorkijngDirectory)
+        workingDirectory: $(WorkingDirectory)
       env: 
         PKR_VAR_subscription_id: $(ARM_SUBSCRIPTION_ID)
         PKR_VAR_tenant_id: $(ARM_TENANT_ID)
