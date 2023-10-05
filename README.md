@@ -32,3 +32,9 @@ packer build ubuntu-n590590.json
 ```bash
 packer build -var-file=ubuntu-n590590-var.json ubuntu-n590590.json
 ```
+
+# azure cli
+## to create a VM
+```bash
+az vm create -g rg-hypera-packer-image -n azxdev01 --image /subscriptions/51f4e493-4815-4858-8bbb-f263e7fb63d6/resourceGroups/rg-hypera-packer-image/providers/Microsoft.Compute/images/img-ubuntu-2204--2023-10-04T16-43-01Z --public-ip-sku Standard
+```

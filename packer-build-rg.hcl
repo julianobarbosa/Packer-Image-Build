@@ -93,5 +93,3 @@ resource "github_actions_secret" "packer_build_resource_group" {
   secret_name     = "PACKER_BUILD_RESOURCE_GROUP"
   plaintext_value = azurerm_resource_group.packer_build.name
 }
-
-
