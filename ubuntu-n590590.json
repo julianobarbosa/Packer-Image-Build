@@ -8,7 +8,7 @@
     "subscription_id": "{{ user `SubscriptionId` }}",
 
     "managed_image_resource_group_name": "{{ user `ImageDestRG` }}",
-    "managed_image_name": "img-ubuntu-2204",
+    "managed_image_name": "img-ubuntu-2204-{{isotime \"2006-01-02-1504\" | clean_resource_name}}",
 
     "os_type": "Linux",
     "image_publisher": "{{ user `ImagePublisher` }}",
@@ -17,7 +17,11 @@
 
     "azure_tags": {
         "Projeto": "INFRA_SO",
-        "task": "Image deployment"
+        "job": "Golden Image",
+        "task": "Image deployment",
+        "owner": "INFRA_SO",
+        "department": "INFRA_SO",
+        "build-time": "{{ isotime \"2006-01-02-1504\" }}"
     },
 
     "location": "East US",
@@ -25,14 +29,10 @@
   }],
   "provisioners": [{
     "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
-    "inline": [
-      "apt update",
-      "apt upgrade -y",
-      "apt install nginx -y",
-
-      "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
-    ],
     "inline_shebang": "/bin/sh -x",
-    "type": "shell"
+    "type": "shell",
+    "scripts": [
+      "provision/scripts/azure.sh"
+    ]
   }]
 }

@@ -7,9 +7,9 @@
   "ImageDestRG": "{{ env `ImageDestRG` }}",    
   "TempResourceGroup": "{{ env `TempResourceGroup` }}",
 
-  "VirtualNetwork": "",
-  "VirtualNetworkRG": "",
-  "Subnet": "",
+  "VirtualNetwork": "vnet-packer-image",
+  "VirtualNetworkRG": "rg-hypera-packer-image",
+  "Subnet": "subnet-packer-image",
 
   "Location": "eastus",
   "VMSize": "",
@@ -21,11 +21,6 @@
   "ImagePublisher":"canonical",
   "ImageOffer":"0001-com-ubuntu-server-jammy",
   "ImageSku":"22_04-lts",
-
-    "os_type": "Linux",
-    "image_publisher": "{{ user `ImagePublisher` }}",
-    "image_offer": "{{ user `ImageOffer` }}",
-    "image_sku": "{{ user `ImageSku` }}",
 
 
   "Build_DefinitionName": "{{env `Build_DefinitionName`}}",
