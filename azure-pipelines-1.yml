@@ -26,7 +26,26 @@ stages:
     - task: PackerTool@0
       inputs:
         version: '1.9.4'
-    
+    - task: Packer@1
+      inputs:
+        connectedServiceType: 'azure'
+        azureSubscription: 'azure-hypera'
+        templatePath: 'ubuntu-n590590.json'
+        command: 'validate'
+        variables-file: 'ubuntu-n590590-var.json'
+    - task: Packer@1
+      inputs:
+        connectedServiceType: 'azure'
+        azureSubscription: 'azure-hypera'
+        templatePath: 'ubuntu-n590590.json'
+        command: 'init'
+    - task: Packer@1
+      inputs:
+        connectedServiceType: 'azure'
+        azureSubscription: 'azure-hypera'
+        templatePath: 'ubuntu-n590590.json'
+        command: 'build'
+        variables-file: 'ubuntu-n590590-var.json'
     - script: build ubuntu 22.04 image for azure!
       displayName: 'packer build -var-file=ubuntu-n590590-var.json ubuntu-n590590.json'
 
