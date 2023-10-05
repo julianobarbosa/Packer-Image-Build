@@ -6,10 +6,69 @@
 trigger:
 - none
 
-pool:
-  vmImage: ubuntu-latest
+name: $(BuildID)
 
-steps:
-- script: build ubuntu 22.04 image for azure!
-  displayName: 'packer build -var-file=ubuntu-n590590-var.json ubuntu-n590590.json'
+variables:
+  - group: keyvault-image-build-variables
+  - group: packer-image-build-variables
+
+stages:
+- stage: ubuntu_2204
+  displayName: Ubuntu 22.04
+  jobs:
+  - job: build
+    displayName: Build ubuntu 22.04 Golden Image
+
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - task: PackerTool@0
+      inputs:
+        version: '1.9.4'
+    - task: Bash@3
+      displayName: "packer build"
+      inputs:
+        filePath: build-ubuntu-n590590.sh
+        workingDirectory: $(WorkingDirectory)
+      env: 
+        PKR_VAR_subscription_id: $(ARM_SUBSCRIPTION_ID)
+        PKR_VAR_tenant_id: $(ARM_TENANT_ID)
+        PKR_VAR_client_id: $(ARM_CLIENT_ID)
+        PKR_VAR_client_secret: $(ARM_CLIENT_SECRET)
+        PKR_VAR_primary_location: $(PrimaryLocation)
+        PKR_VAR_image_name: $(ImageName)
+        PKR_VAR_image_version: $(imageVersion)
+        PKR_VAR_gallery_resource_group: $(GalleryResourceGroup)
+        PKR_VAR_gallery_name: $(GalleryName)
+        PKR_VAR_agent_ipaddress: $(BuildAgentIP.address)
+
+        PKR_VAR_ADOServicePrincipalAppId: $(ADOAppID)
+        PKR_VAR_ADOServicePrincipalSecret: $(ADOAppSecret)
+        PKR_VAR_TenantId: $(TenantID)
+        PKR_VAR_SubscriptionId: $(SubscriptionID)
+        PKR_VAR_ImageDestRG: $(ImageDestRG)
+        PKR_VAR_TempResourceGroup: $(TempResourceGroup)
+        PKR_VAR_VirtualNetwork: $(VirtualNetwork)
+        PKR_VAR_VirtualNetworkRG: $(VirtualNetworkRG)
+        PKR_VAR_Subnet: $(Subnet)
+        PKR_VAR_Location: $(Localtion)
+        PKR_VAR_VMSize": $(VMSize)
+        PKR_VAR_StorageAccountInstallersName: $(StorageAccountName)
+        PKR_VAR_StorageAccountInstallersKey: $(StorageAccountKey)
+        PKR_VAR_StorageAccountInstallersPath: $(StorageAccountPath)
+        PKR_VAR_ImagePublisher: $(ImagePublisher)
+        PKR_VAR_ImageOffer: $(ImageOffer)
+        PKR_VAR_ImageSku: $(ImageSku)
+        PKR_VAR_Build_DefinitionName: $(Build_DefinitionName)
+        PKR_VAR_Build_BuildNumber: $(Build_BuildNumber)
+    - task: Packer@1
+      inputs:
+        connectedServiceType: 'azure'
+        azureSubscription: 'azure-hypera'
+        templatePath: 'ubuntu-n590590.json'
+        command: 'build'
+        variables-file: 'ubuntu-n590590-var.json'
+    - script: build ubuntu 22.04 image for azure!
+      displayName: 'packer build -var-file=ubuntu-n590590-var.json ubuntu-n590590.json'
 
