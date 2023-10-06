@@ -29,8 +29,8 @@ stages:
     - task: Bash@3
       displayName: "packer build"
       inputs:
-        filePath: ubuntu-22.04/build.sh
-        workingDirectory: $(WorkingDirectory)
+        filePath: build.sh
+        workingDirectory: $(WorkingDirectory)/ubuntu-22.04
       env: 
         PKR_VAR_subscription_id: $(ARM_SUBSCRIPTION_ID)
         PKR_VAR_tenant_id: $(ARM_TENANT_ID)
@@ -69,6 +69,7 @@ stages:
         templatePath: 'ubuntu-n590590.json'
         command: 'build'
         variables-file: 'ubuntu-n590590-var.json'
+        
     - script: build ubuntu 22.04 image for azure!
       displayName: 'packer build -var-file=ubuntu-n590590-var.json ubuntu-n590590.json'
 
