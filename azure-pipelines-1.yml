@@ -27,6 +27,9 @@ stages:
       inputs:
         version: '1.9.4'
     - task: Bash@3
+      inputs:
+        filePath: 'tree .'
+    - task: Bash@3
       displayName: "packer build"
       inputs:
         filePath: build.sh
