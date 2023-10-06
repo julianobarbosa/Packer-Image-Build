@@ -1,4 +1,5 @@
 {
+  "variables": {
   "ADOServicePrincipalAppId": "{{ env `ADOServicePrincipalAppId` }}",
   "ADOServicePrincipalSecret": "{{ env `ADOServicePrincipalSecret` }}",
   "TenantId": "{{ env `ARM_TENANT_ID` }}",
@@ -25,4 +26,5 @@
 
   "Build_DefinitionName": "{{env `Build_DefinitionName`}}",
   "Build_BuildNumber": "{{env `Build_BuildNumber`}}"
+}
 }
