@@ -26,9 +26,19 @@ stages:
     - task: PackerTool@0
       inputs:
         version: '1.9.4'
-    - task: Bash@3
+    - task: CmdLine@2
       inputs:
-        filePath: 'tree .'
+        script: |
+          echo Write your commands here
+      
+          tree .
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo Write your commands here
+          
+          build.sh
+        workingDirectory: '$(WorkingDirectory)/ubuntu-22.04'
     - task: Bash@3
       displayName: "packer build"
       inputs:
