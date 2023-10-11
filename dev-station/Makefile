@@ -5,6 +5,9 @@ SHELL := /bin/bash
 init:
 	terraform init
 
+refresh:
+	terraform plan --refresh-only
+
 fmt:
 	terraform fmt -recursive
 
@@ -19,3 +22,6 @@ destroy:
 
 validate:
 	terraform validate
+
+checkov:
+	checkov --directory .

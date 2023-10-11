@@ -53,3 +53,21 @@ variable "tags" {
   }
 }
 
+// Variable for the Azure Bastion Host details
+# variable "bastion_host" {
+#   description = "The details of the Azure Bastion Host to be created"
+#   type = object({
+#     name                   = string 
+#     sku                    = string // SKU of the Azure Bastion Host, either "Basic" or "Standard"
+#     copy_paste_enabled     = bool 
+#     file_copy_enabled      = bool 
+#     ip_connect_enabled     = bool 
+#     scale_units            = number /// Number of scale units for the Azure Bastion Host, between 2-50
+#     shareable_link_enabled = bool 
+#     tunneling_enabled      = bool 
+#     ip_configuration = object({
+#       name = string // Name of the IP configuration for the Azure Bastion Host.
+#     })
+#   })
+# }
+

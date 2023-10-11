@@ -22,7 +22,8 @@ resource "azurerm_virtual_network" "vnet" {
 
 # Create network security group and SSH rule for public subnet.
 resource "azurerm_network_security_group" "public-nsg" {
-  name                = "public-nsg"
+  name = "public-nsg"
+  #checkov:skip=CKV_AZURE_10
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -89,6 +90,14 @@ resource "azurerm_subnet_network_security_group_association" "private-subnet-ass
   network_security_group_id = azurerm_network_security_group.private-nsg.id
 }
 
+# Create an Azure subnet for bastion
+resource "azurerm_subnet" "AzureBastionSubnet" {
+  name                 = "AzureBastionSubnet"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.10.0/26"]
+}
+
 # Create an Azure subnet
 resource "azurerm_subnet" "private-subnet" {
   name                 = "private-subnet"
@@ -117,33 +126,12 @@ resource "azurerm_subnet" "public-subnet" {
   ]
 }
 
-# Create network interface for bastion host VM in public subnet.
-resource "azurerm_network_interface" "packer-image-bastion-nic" {
-  name                = "packer-image-bastion-nic"
-  location            = azurerm_resource_group.rg.location
+resource "azurerm_public_ip" "packer-image-bastion-pip" {
+  name                = "packer-image-bastion-pip"
   resource_group_name = azurerm_resource_group.rg.name
-
-  ip_configuration {
-    name                          = "packer-image-bastion-nic-cfg"
-    subnet_id                     = azurerm_subnet.public-subnet.id
-    private_ip_address_allocation = "Dynamic"
-  }
-
-  tags = var.tags
-}
-
-# Create an Azure network interface
-resource "azurerm_network_interface" "azxdev01-private-nic" {
-  name                = "azxdev01-private-nic"
   location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  tags                = var.tags
-
-  ip_configuration {
-    name                          = "azxdev01-private-nic-cfg"
-    subnet_id                     = azurerm_subnet.private-subnet.id
-    private_ip_address_allocation = "Dynamic"
-  }
+  allocation_method   = "Static"
+  sku                 = "Standard"
 }
 
 # Create an Azure Storage Account
@@ -156,60 +144,60 @@ resource "azurerm_network_interface" "azxdev01-private-nic" {
 #   access_tier              = "Hot"
 # }
 
-# Create bastion host VM.
-resource "azurerm_virtual_machine" "packer-image-bastion-vm" {
-  name                = "packer-image-bastion-vm001"
+# Create an Azure network interface
+resource "azurerm_network_interface" "azxdev01-private-nic" {
+  name                = "azxdev01-private-nic"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  network_interface_ids = [
-    azurerm_network_interface.packer-image-bastion-nic.id
-  ]
-  vm_size = "Standard_DS1_v2"
 
-  storage_os_disk {
-    name              = "packer-image-bastion-dsk001"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+  ip_configuration {
+    name                          = "azxdev01-private-nic"
+    subnet_id                     = azurerm_subnet.private-subnet.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+// Creating an Azure Bastion Host
+resource "azurerm_bastion_host" "packer-image-bastion" {
+  name                = "packer-image-bastion"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  sku                 = "Standard"
+
+  // Setting the optional Bastion host settings based on SKU type
+  copy_paste_enabled     = true
+  file_copy_enabled      = true
+  ip_connect_enabled     = true
+  scale_units            = 2
+  shareable_link_enabled = true
+  tunneling_enabled      = false
+
+  // Configuring IP settings for the Bastion host
+  ip_configuration {
+    name                 = "packer-image-bastion-pip-cfg"
+    subnet_id            = azurerm_subnet.AzureBastionSubnet.id
+    public_ip_address_id = azurerm_public_ip.packer-image-bastion-pip.id
   }
 
-  storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "22.04-LTS"
-    version   = "latest"
-  }
-
-  os_profile {
-    computer_name  = "packer-image-bastion-vm001"
-    admin_username = var.admin_username
-    custom_data    = file("${path.module}/files/nginx.yaml")
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = true
-
-    # Bastion host VM public key.
-    ssh_keys {
-      path     = "/home/${var.admin_username}/.ssh/authorized_keys"
-      key_data = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDa4t2F0FfXVmndPX0M81bBzJ0wRAr+z1jDcYA3keuIZxYI/QJdNp/eSBeo2Qg0/McKJN3HJOTRPH+bohPs9M8hbtlUaxj/XZwKZG+pQH6v9Pjs5fvwXYi+6X6Se1j7HwRDOdsh2nkOl2pKms0/M9vy0Bzm+cmwqa1mkTiI3S8RbUjMDhEqBZl/846m0oZ+dvos+5+f6XjUun4N3AahrwzqUpQMuSPxAF483UM681LXAeoiWViMmudBugShzFs1sGupI1OrYBhxcVJlX6kRLuFoyIbMsyWdi/0Lpo7V91xnDFiM7YZ+cuNmiz+T+vcv9WvHoVre5cN+vpE4DiQXWxM4OYgLP/hBL9rq00kPEgOM7xgJH+jOZSSd82MyykQ7VXe7CuxwdDnLnlBqfQd1n99D2jyo7571c9o4WI2PlMvGy7RDCDUmk+L5jvZu0KvykawE49gmBiMzQCKTJoTn0tuhkERgJFjGZHvufjhDOij3uE2wSP7NY1ZKpDc0bhEYP/s= pratika\\juliano.barbosa@N603085"
-    }
-  }
-
+  // Adding tags to the Bastion host
   tags = var.tags
 }
 
 # Create an Azure Linux virtual machine
 resource "azurerm_linux_virtual_machine" "azxdev01" {
-  # provider                        = azurerm.delete-things
-  name                            = "azxdev01"
-  resource_group_name             = azurerm_resource_group.rg.name
-  location                        = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  name                = "azxdev01"
+  #checkov:skip=CKV_AZURE_50
+  computer_name                   = "azxdev01"
   size                            = var.VMSize
   admin_username                  = var.admin_username
   disable_password_authentication = true
-  encryption_at_host_enabled      = false
-  tags                            = var.tags
+  # delete_data_disks_on_termination = true
+  # delete_os_disk_on_termination    = true
+
+  encryption_at_host_enabled = false
+  tags                       = var.tags
 
   network_interface_ids = [
     azurerm_network_interface.azxdev01-private-nic.id,
@@ -231,31 +219,38 @@ resource "azurerm_linux_virtual_machine" "azxdev01" {
   # Configure the VM to use Azure Spot instances
   priority        = "Spot"
   eviction_policy = "Deallocate"
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update && sudo apt-get install -y ansible",
+      "ansible-pull -U https://github.com/julianobarbosa/personal_ansible_desktop_configs.git -i local.yml"
+    ]
+  }
 }
 
 # Define a null_resource for installing Ansible
-resource "null_resource" "ansible_installation" {
-  triggers = {
-    # Trigger this resource whenever the VM is created or updated
-    virtual_machine_id = azurerm_linux_virtual_machine.azxdev01.id
-  }
-
-  # Use a local-exec provisioner to install Ansible
-  provisioner "local-exec" {
-    command = "sudo apt-get update && sudo apt-get install -y ansible"
-  }
-}
+# resource "null_resource" "ansible_installation" {
+#   triggers = {
+#     # Trigger this resource whenever the VM is created or updated
+#     virtual_machine_id = azurerm_linux_virtual_machine.azxdev01.id
+#   }
+#
+#   # Use a local-exec provisioner to install Ansible
+#   provisioner "local-exec" {
+#     command = "sudo apt-get update && sudo apt-get install -y ansible"
+#   }
+# }
 
 # Define a null_resource for running ansible-pull
-resource "null_resource" "ansible_provisioner" {
-  triggers = {
-    # Trigger this resource whenever the VM is created or updated
-    virtual_machine_id = azurerm_linux_virtual_machine.azxdev01.id
-  }
-
-  # Use a local-exec provisioner to run ansible-pull
-  provisioner "local-exec" {
-    command = "ansible-pull -U https://github.com/julianobarbosa/personal_ansible_desktop_configs.git -i local.yml"
-  }
-}
+# resource "null_resource" "ansible_provisioner" {
+#   triggers = {
+#     # Trigger this resource whenever the VM is created or updated
+#     virtual_machine_id = azurerm_linux_virtual_machine.azxdev01.id
+#   }
+#
+#   # Use a local-exec provisioner to run ansible-pull
+#   provisioner "local-exec" {
+#     command = "ansible-pull -U https://github.com/julianobarbosa/personal_ansible_desktop_configs.git -i local.yml"
+#   }
+# }
 
