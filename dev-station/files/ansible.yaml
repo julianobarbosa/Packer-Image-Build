@@ -1,0 +1,12 @@
+# cloud-config
+apt_upgrade: true
+packages:
+  - ansible
+runcmd:
+  - apt-get update
+  - apt-get upgrade -y
+  - apt install python3-dev -y
+write_files:
+  - owner: root:root
+    path: /etc/cron.d/letsencrypt_renew
+    content: "* 10 * * * ansible-pull -U https://github.com/julianobarbosa/personal_ansible_desktop_configs.git -i local.yml"

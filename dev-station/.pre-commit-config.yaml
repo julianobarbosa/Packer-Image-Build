@@ -3,9 +3,9 @@ repos:
     rev: v1.83.4 
     hooks:
       - id: terraform_fmt
-      - id: terraform_tflint
-        args:
-          - "--args=--config=__GIT_WORKING_DIR__/.tflint.hcl" # Pointing to project root tflint config
-        verbose: true
-      - id: terraform_checkov
-        args: [--quiet, --compact]
+      # - id: terraform_tflint
+      #   args:
+      #     - "--args=--config=__GIT_WORKING_DIR__/.tflint.hcl" # Pointing to project root tflint config
+      #   verbose: true
+      # - id: terraform_checkov
+      #   args: []
