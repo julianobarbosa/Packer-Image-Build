@@ -4,6 +4,11 @@ output "vm_id" {
 }
 
 output "vm_name" {
+  description = "Name of the Virtual Machine in S.O."
+  value       = azurerm_linux_virtual_machine.azxdev01.computer_name
+}
+
+output "computer_name" {
   description = "Name of the Virtual Machine"
   value       = azurerm_linux_virtual_machine.azxdev01.name
 }
