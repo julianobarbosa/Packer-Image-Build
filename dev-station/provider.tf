@@ -9,6 +9,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.75.0"
     }
+    cloudinit = {
+      source  = "hashicorp/cloudinit"
+      version = "2.3.2"
+    }
     template = {
       source  = "hashicorp/template"
       version = "2.2.0"
@@ -26,6 +30,10 @@ terraform {
       version = "3.5.1"
     }
   }
+}
+
+provider "ansible" {
+  # Configuration options
 }
 
 provider "azurerm" {
@@ -54,6 +62,10 @@ provider "azurerm" {
       delete_os_disk_on_deletion = false
     }
   }
+}
+
+provider "cloudinit" {
+  # Configuration options
 }
 
 provider "null" {
