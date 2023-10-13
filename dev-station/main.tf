@@ -106,6 +106,14 @@ resource "azurerm_subnet_network_security_group_association" "private-subnet-ass
 }
 
 # Create an Azure subnet for bastion
+resource "azurerm_subnet" "gateway-subnet" {
+  name                 = "gateway-subnet"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.255.224/27"]
+}
+
+# Create an Azure subnet for bastion
 resource "azurerm_subnet" "AzureBastionSubnet" {
   name                 = "AzureBastionSubnet"
   resource_group_name  = azurerm_resource_group.rg.name
@@ -141,12 +149,32 @@ resource "azurerm_subnet" "public-subnet" {
   ]
 }
 
+# Create public IP address for bastion host.
 resource "azurerm_public_ip" "packer-image-bastion-pip" {
   name                = "packer-image-bastion-pip"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   allocation_method   = "Static"
   sku                 = "Standard"
+  tags                = var.tags
+}
+
+resource "azurerm_public_ip_prefix" "packer-image-natg-ipprefix" {
+  name                = "packer-image-natg-ipprefix"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  prefix_length       = 30
+  tags                = var.tags
+}
+
+# Create public IP address for NAT Gateway.
+resource "azurerm_public_ip" "packer-image-natg-pip" {
+  name                = "packer-image-natg-pip"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  tags                = var.tags
 }
 
 # Create an Azure Storage Account
@@ -161,16 +189,76 @@ resource "azurerm_public_ip" "packer-image-bastion-pip" {
 
 # Create an Azure network interface
 resource "azurerm_network_interface" "azxdev01-private-nic" {
-  name                = "azxdev01-private-nic"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                 = "azxdev01-private-nic"
+  location             = azurerm_resource_group.rg.location
+  resource_group_name  = azurerm_resource_group.rg.name
+  enable_ip_forwarding = true
 
   ip_configuration {
     name                          = "azxdev01-private-nic"
     subnet_id                     = azurerm_subnet.private-subnet.id
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "10.0.2.4"
   }
 }
+
+# Create an Azure route table
+# resource "azurerm_route_table" "packer-image-gateway-rt" {
+#   name                          = "packer-image-gateway-rt"
+#   location                      = azurerm_resource_group.rg.location
+#   resource_group_name           = azurerm_resource_group.rg.name
+#   disable_bgp_route_propagation = false
+#
+#   route {
+#     name           = "toHub"
+#     address_prefix = "10.0.0.0/16"
+#     next_hop_type  = "VnetLocal"
+#   }
+
+# route {
+# name                   = "toSpoke1"
+# address_prefix         = "10.1.0.0/16"
+# next_hop_type          = "VirtualAppliance"
+# next_hop_in_ip_address = "10.0.0.36"
+# }
+
+# route {
+# name                   = "toSpoke2"
+# address_prefix         = "10.2.0.0/16"
+# next_hop_type          = "VirtualAppliance"
+# next_hop_in_ip_address = "10.0.0.36"
+# }
+#
+#  tags = var.tags
+#}
+
+resource "azurerm_nat_gateway" "packer-image-natg" {
+  name                = "packer-image-natg"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku_name            = "Standard"
+  tags                = var.tags
+}
+
+# Create an Azure virtual machine Extensions
+# resource "azurerm_virtual_machine_extension" "enable-routes" {
+#   name                 = "enable-iptables-routes"
+#   virtual_machine_id   = azurerm_linux_virtual_machine.azxdev01.id
+#   publisher            = "Microsoft.Azure.Extensions"
+#   type                 = "CustomScript"
+#   type_handler_version = "2.0"
+#
+#   settings = <<SETTINGS
+#     {
+#         "fileUris": [
+#         "https://raw.githubusercontent.com/mspnp/reference-architectures/master/scripts/linux/enable-ip-forwarding.sh"
+#         ],
+#         "commandToExecute": "bash enable-ip-forwarding.sh"
+#     }
+#     SETTINGS
+#
+#   tags = var.tags
+# }
 
 // Creating an Azure Bastion Host
 resource "azurerm_bastion_host" "packer-image-bastion" {
@@ -235,12 +323,7 @@ resource "azurerm_linux_virtual_machine" "azxdev01" {
   priority        = "Spot"
   eviction_policy = "Deallocate"
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update && sudo apt-get install -y ansible",
-      "ansible-pull -U https://github.com/julianobarbosa/personal_ansible_desktop_configs.git -i local.yml"
-    ]
-  }
+  user_data = data.cloudinit_config.azxdev01-cloud-init.rendered
 }
 
 # Define a null_resource for installing Ansible
