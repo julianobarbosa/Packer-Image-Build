@@ -49,6 +49,21 @@ resource "azurerm_subnet_network_security_group_association" "public-subnet-asso
   network_security_group_id = azurerm_network_security_group.public-nsg.id
 }
 
+resource "azurerm_subnet_nat_gateway_association" "packer-image-public-subnet-nat-assoc" {
+  subnet_id      = azurerm_subnet.public-subnet.id
+  nat_gateway_id = azurerm_nat_gateway.packer-image-natg.id
+}
+
+resource "azurerm_nat_gateway_public_ip_association" "packer-image-natg-pip-assoc" {
+  nat_gateway_id       = azurerm_nat_gateway.packer-image-natg.id
+  public_ip_address_id = azurerm_public_ip.packer-image-natg-pip.id
+}
+
+resource "azurerm_nat_gateway_public_ip_prefix_association" "packer-image-natg-ipprefix-assoc" {
+  nat_gateway_id      = azurerm_nat_gateway.packer-image-natg.id
+  public_ip_prefix_id = azurerm_public_ip_prefix.packer-image-natg-ipprefix.id
+}
+
 # Create network security group and SSH rule for private subnet.
 resource "azurerm_network_security_group" "private-nsg" {
   name                = "private-nsg"
