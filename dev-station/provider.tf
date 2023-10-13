@@ -9,6 +9,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.75.0"
     }
+    template = {
+      source  = "hashicorp/template"
+      version = "2.2.0"
+    }
     tls = {
       source  = "hashicorp/tls"
       version = ">=4.0.4"
@@ -59,3 +63,8 @@ provider "null" {
 provider "random" {
   # Configuration options
 }
+
+provider "template" {
+  # Configuration options
+}
+
