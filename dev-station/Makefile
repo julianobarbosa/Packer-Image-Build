@@ -5,6 +5,9 @@ SHELL := /bin/bash
 init:
 	terraform init
 
+recreate:
+	terraform apply -replace "azurerm_linux_virtual_machine.azxdev01" 
+
 refresh:
 	terraform plan --refresh-only
 
