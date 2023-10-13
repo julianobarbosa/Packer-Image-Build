@@ -273,7 +273,7 @@ resource "azurerm_bastion_host" "packer-image-bastion" {
   ip_connect_enabled     = true
   scale_units            = 2
   shareable_link_enabled = true
-  tunneling_enabled      = false
+  tunneling_enabled      = true
 
   // Configuring IP settings for the Bastion host
   ip_configuration {
