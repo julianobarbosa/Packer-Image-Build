@@ -9,7 +9,7 @@ recreate:
 	terraform apply -replace "azurerm_linux_virtual_machine.azxdev01" 
 
 refresh:
-	terraform plan --refresh-only
+	terraform plan --refresh-only --out tfplan
 
 fmt:
 	terraform fmt -recursive
