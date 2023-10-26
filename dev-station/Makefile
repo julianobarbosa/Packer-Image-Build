@@ -24,8 +24,12 @@ default: help
 init: ## Initialize Terraform
 	@terraform init
 
+remove-ssh-keygen:
+	@ssh-keygen -f "/home/barbosa/.ssh/known_hosts" -R "[127.0.0.1]:50022"
+
 recreate: ## Recreate resources with Terraform
 	@terraform apply -replace "azurerm_linux_virtual_machine.azxdev01"
+	@remove-ssh-keygen
 
 refresh: validate ## Refresh Terraform plan
 	@terraform plan --refresh-only --out tfplan
@@ -38,9 +42,11 @@ plan: validate ## Generate Terraform plan
 
 apply: ## Apply Terraform plan
 	@terraform apply tfplan
+	@remove-ssh-keygen
 
 destroy: ## Destroy Terraform resources
 	@terraform destroy
+	@remove-ssh-keygen
 
 validate: ## Validate Terraform configuration
 	@terraform validate
