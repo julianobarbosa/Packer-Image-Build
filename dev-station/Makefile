@@ -54,22 +54,31 @@ validate: ## Validate Terraform configuration
 checkov: ## Run Checkov security checks
 	@checkov --directory .
 
+low_performance: ## Connect to the Bastion host
+	# Add your command here to connect to the Bastion host
+	@echo "Change VM perfil to low performance ..."
+
+
+high_performance: ## Connect to the Bastion host
+	# Add your command here to connect to the Bastion host
+	@echo "Change VM perfil to high performance host..."
+
 bastion: ## Connect to the Bastion host
 	# Add your command here to connect to the Bastion host
 	@echo "Connecting to the Bastion host..."
 
 ssh: ## Create an SSH tunnel to an Azure VM in the background
 	# Replace VM_IP, VM_PORT, and KEY_PATH with actual values
-	nohup az vm create-ssh --resource-group myResourceGroup --name myVM --ip-address VM_IP --port VM_PORT --private-key KEY_PATH > /dev/null 2>&1 & echo $$! > $(SSH_PID_FILE)
+	nohup az vm create-ssh --resource-group myResourceGroup --name myVM --ip-address VM_IP --port VM_PORT --private-key KEY_PATH > /dev/null 2>&1 & echo $$! > $$(SSH_PID_FILE)
 
 tunnel: ## Create an tunnel to an Azure bastion in the background
 	# Replace VM_IP, VM_PORT, and KEY_PATH with actual values
-	az network bastion tunnel --name $$ARM_BASTION_NAME --resource-group $$ARM_RESOURCE_GROUP --target-ip-address $$VM_IP --resource-port 22 --port $$VM_PORT > /dev/null 2>&1 & echo $$! > $(TUNNEL_PID_FILE)
+	az network bastion tunnel --name $$ARM_BASTION_NAME --resource-group $$ARM_RESOURCE_GROUP --target-ip-address $$VM_IP --resource-port 22 --port $$VM_PORT > /dev/null 2>&1 & echo $$! > $$(TUNNEL_PID_FILE)
 
 kill_tunnel: ## Kill the SSH tunnel process
 	@if [ -f $(TUNNEL_PID_FILE) ]; then \
 		kill $$(cat $(TUNNEL_PID_FILE)); \
-		rm -f $(TUNNEL_PID_FILE); \
+		rm -f $$(TUNNEL_PID_FILE); \
 		echo "SSH tunnel process killed"; \
 	else \
 		echo "No tunnel process to kill"; \
