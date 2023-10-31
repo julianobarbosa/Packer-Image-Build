@@ -12,9 +12,9 @@ packer {
 source "azure-arm" "image" {
   client_id                         = var.ADOServicePrincipalAppId
   client_secret                     = var.ADOServicePrincipalSecret
-  image_offer                       = var.ImageOffer
-  image_publisher                   = var.ImagePublisher
-  image_sku                         = var.ImageSku
+  image_offer                       = "UbuntuServer"
+  image_publisher                   = "Canonical"
+  image_sku                         = "22.04-LTS-arm64"
   location                          = "eastus"
   managed_image_name                = var.ImageName
   managed_image_resource_group_name = var.ImageDestRG
