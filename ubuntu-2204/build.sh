@@ -1,5 +1,5 @@
 #!/bin/sh
-echo 'Build packer image for ubuntu 22.04'
+echo 'Build packer image for ubuntu 22.04 x64'
 
 echo 'packer install plugins'
 packer plugins install .
