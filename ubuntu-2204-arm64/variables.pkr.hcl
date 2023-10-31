@@ -46,7 +46,7 @@ variable "ImagePublisher" {
 
 variable "ImageSku" {
   type    = string
-  default = "22_04-lts-gen2"
+  default = "22_04-lts"  # Update this to a valid Sku
 }
 
 variable "ImageName" {
