@@ -9,4 +9,4 @@ runcmd:
 write_files:
   - owner: root:root
     path: /etc/cron.d/letsencrypt_renew
-    content: "* 10 * * * ansible-pull -U https://github.com/julianobarbosa/personal_ansible_desktop_configs.git -i local.yml"
+    content: "* 10 * * * ansible-pull -U https://github.com/julianobarbosa/personal_ansible_desktop_configs.git -i hosts local.yml --limit azxdev01 --tags workstation"
