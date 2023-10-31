@@ -348,7 +348,7 @@ resource "azurerm_linux_virtual_machine" "azxdev01" {
 #
 #   # Use a local-exec provisioner to run ansible-pull
 #   provisioner "local-exec" {
-#     command = "ansible-pull -U https://github.com/julianobarbosa/personal_ansible_desktop_configs.git -i local.yml"
+#     command = "ansible-pull -U https://github.com/julianobarbosa/personal_ansible_desktop_configs.git -i hosts local.yml --limit azxdev01 --tags workstation"
 #   }
 # }
 
