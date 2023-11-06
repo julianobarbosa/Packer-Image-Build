@@ -40,6 +40,7 @@ source "azure-arm" "image" {
     job        = "Golden Image"
     owner      = "INFRA_SO"
     task       = "Image deployment"
+    architecture = "x64"
   }
 }
 
