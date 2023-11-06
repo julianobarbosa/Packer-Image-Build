@@ -35,7 +35,8 @@ variable "ImageDestRG" {
 
 variable "ImageOffer" {
   type    = string
-  default = "0001-com-ubuntu-server-jammy"
+  # default = "0001-com-ubuntu-server-jammy"
+  default = "0001-com-ubuntu-server-jammy-daily"
 }
 
 variable "ImagePublisher" {
@@ -45,12 +46,13 @@ variable "ImagePublisher" {
 
 variable "ImageSku" {
   type    = string
-  default = "22_04-lts"
+  # default = "22_04-lts"
+  default = "22_04-daily-lts-gen2"
 }
 
 variable "ImageName" {
   type    = string
-  default = "img-ubuntu-2204-{{ isotime \"2006-01-02-1504\" }}"
+  default = "img-ubuntu-2204-x64-{{ isotime \"2006-01-02-1504\" }}"
 }
 
 variable "ImageGallery" {
@@ -105,7 +107,7 @@ variable "TenantId" {
 
 variable "VMSize" {
   type    = string
-  default = ""
+  default = "Standard_E8s_v5"
 }
 
 variable "VirtualNetwork" {
